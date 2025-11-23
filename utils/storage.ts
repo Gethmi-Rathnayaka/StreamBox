@@ -51,3 +51,22 @@ export const removeAuth = async () => {
     console.log("Error removing auth:", err);
   }
 };
+
+// Profile description helpers
+export const saveProfileDescription = async (description: string) => {
+  try {
+    await AsyncStorage.setItem("profile_description", description);
+  } catch (err) {
+    console.log("Error saving profile description:", err);
+  }
+};
+
+export const loadProfileDescription = async () => {
+  try {
+    const data = await AsyncStorage.getItem("profile_description");
+    return data ?? "";
+  } catch (err) {
+    console.log("Error loading profile description:", err);
+    return "";
+  }
+};
