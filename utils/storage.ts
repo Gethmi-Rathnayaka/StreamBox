@@ -24,6 +24,7 @@ export const loadFavourites = async () => {
 export const saveAuth = async (auth: any) => {
   try {
     await AsyncStorage.setItem("auth", JSON.stringify(auth));
+    // debug logging removed
   } catch (err) {
     console.log("Error saving auth:", err);
   }
@@ -33,9 +34,20 @@ export const saveAuth = async (auth: any) => {
 export const loadAuth = async () => {
   try {
     const data = await AsyncStorage.getItem("auth");
-    return data ? JSON.parse(data) : null;
+    const parsed = data ? JSON.parse(data) : null;
+    // debug logging removed
+    return parsed;
   } catch (err) {
     console.log("Error loading auth:", err);
     return null;
+  }
+};
+
+// Remove auth from AsyncStorage
+export const removeAuth = async () => {
+  try {
+    await AsyncStorage.removeItem("auth");
+  } catch (err) {
+    console.log("Error removing auth:", err);
   }
 };
