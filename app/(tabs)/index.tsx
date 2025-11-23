@@ -27,17 +27,16 @@ export default function Home() {
     loadData();
   }, []);
 
-  if (!movies.length)
-    return <ActivityIndicator size="large" style={{ flex: 1 }} />;
-
-  // Random filtered sections
   const bestOfTheWeek = useMemo(() => movies.slice(0, 10), [movies]);
   const recommended = useMemo(() => movies.slice(5, 15), [movies]);
   const continueWatching = useMemo(() => movies.slice(8, 18), [movies]);
 
+  if (!movies.length) {
+    return <ActivityIndicator size="large" style={{ flex: 1 }} />;
+  }
+
   return (
     <ScrollView style={{ flex: 1 }}>
-   
       <BannerCarousel movies={movies} />
 
       <Section title="Best of This Week" style={{ marginTop: 10 }}>
