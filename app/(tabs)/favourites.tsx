@@ -1,3 +1,4 @@
+import { useThemeColor } from "@/hooks/use-theme-color";
 import { useRouter } from "expo-router";
 import React from "react";
 import { Button, FlatList, Text, View } from "react-native";
@@ -16,7 +17,11 @@ export default function Favourites() {
         <Text style={{ fontSize: 18, marginBottom: 12 }}>
           Log in to view favourites
         </Text>
-        <Button title="Log in" onPress={() => router.push("/login")} />
+        <Button
+          title="Log in"
+          onPress={() => router.push("/login")}
+          color={useThemeColor({}, "primaryVariant")}
+        />
       </View>
     );
   }

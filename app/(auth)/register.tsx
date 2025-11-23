@@ -1,3 +1,4 @@
+import { useThemeColor } from "@/hooks/use-theme-color";
 import { useRouter } from "expo-router";
 import { Formik } from "formik";
 import React from "react";
@@ -19,6 +20,7 @@ const registerSchema = Yup.object().shape({
 
 export default function Register() {
   const router = useRouter();
+  const btnColor = useThemeColor({}, "primaryVariant");
 
   return (
     <View style={styles.container}>
@@ -63,10 +65,18 @@ export default function Register() {
               <Text style={styles.error}>{errors.password}</Text>
             )}
 
-            <Button title="Register" onPress={handleSubmit as any} />
+            <Button
+              title="Register"
+              onPress={handleSubmit as any}
+              color={btnColor}
+            />
 
             <View style={{ height: 10 }} />
-            <Button title="Go to Login" onPress={() => router.push("/login")} />
+            <Button
+              title="Go to Login"
+              onPress={() => router.push("/login")}
+              color={btnColor}
+            />
           </>
         )}
       </Formik>
