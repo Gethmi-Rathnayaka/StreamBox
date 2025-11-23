@@ -1,6 +1,7 @@
-import React from "react";
-import { Tabs } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
+import { Tabs } from "expo-router";
+import React from "react";
+import { Image } from "react-native";
 
 export default function TabsLayout() {
   return (
@@ -8,6 +9,12 @@ export default function TabsLayout() {
       screenOptions={{
         headerShown: true,
         tabBarActiveTintColor: "#007AFF",
+        headerRight: () => (
+          <Image
+            source={require("../../assets/logo.png")}
+            style={{ width: 36, height: 36, marginRight: 12 }}
+          />
+        ),
       }}
     >
       <Tabs.Screen

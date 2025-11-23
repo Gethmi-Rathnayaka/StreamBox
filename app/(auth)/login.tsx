@@ -1,7 +1,7 @@
 import { useRouter } from "expo-router";
 import { Formik } from "formik";
 import React, { useState } from "react";
-import { Alert, Button, StyleSheet, Text, TextInput, View } from "react-native";
+import { Alert, Button, StyleSheet, Text, TextInput, View, Image } from "react-native";
 import { useDispatch } from "react-redux";
 import * as Yup from "yup";
 import { setAuth } from "../../store/authSlice";
@@ -19,6 +19,15 @@ export default function Login() {
 
   return (
     <View style={styles.container}>
+      <Image
+        source={require("../../assets/logo.png")}
+        style={styles.logo}
+        resizeMode="contain"
+      />
+
+      <Text style={styles.title}>Welcome Back</Text>
+      <Text style={styles.subtitle}>Login to continue</Text>
+
       <Formik
         initialValues={{ username: "", password: "" }}
         validationSchema={loginSchema}
@@ -44,7 +53,7 @@ export default function Login() {
               value={values.username}
             />
             {errors.username && (
-              <Text style={{ color: "red" }}>{errors.username}</Text>
+              <Text style={styles.error}>{errors.username}</Text>
             )}
 
             <TextInput
@@ -55,7 +64,7 @@ export default function Login() {
               secureTextEntry
             />
             {errors.password && (
-              <Text style={{ color: "red" }}>{errors.password}</Text>
+              <Text style={styles.error}>{errors.password}</Text>
             )}
 
             <Button
@@ -63,6 +72,8 @@ export default function Login() {
               onPress={handleSubmit as any}
               disabled={loading}
             />
+
+            <View style={{ height: 10 }} />
             <Button
               title="Go to Register"
               onPress={() => router.push("/register")}
@@ -76,5 +87,14 @@ export default function Login() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, justifyContent: "center", padding: 20 },
-  input: { borderWidth: 1, padding: 10, marginBottom: 10, borderRadius: 6 },
+  logo: {
+    width: 120,
+    height: 120,
+    alignSelf: "center",
+    marginBottom: 20,
+  },
+  title: { fontSize: 24, fontWeight: "bold", textAlign: "center" },
+  subtitle: { fontSize: 14, color: "#666", textAlign: "center", marginBottom: 20 },
+  input: { borderWidth: 1, padding: 12, marginBottom: 10, borderRadius: 8, borderColor: "#ccc" },
+  error: { color: "red", marginBottom: 8 },
 });

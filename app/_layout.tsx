@@ -18,14 +18,6 @@ function AuthGate() {
         if (!mounted) return;
         if (auth && auth.token) {
           dispatch(setAuth(auth));
-        } else {
-          // If not authenticated and not already on auth pages, redirect to login
-          if (
-            !pathname?.startsWith("/login") &&
-            !pathname?.startsWith("/register")
-          ) {
-            router.replace("/login");
-          }
         }
       } catch (err) {
         console.error("Auth restore failed", err);
