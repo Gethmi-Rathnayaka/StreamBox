@@ -54,8 +54,10 @@ export default function Profile() {
 
   if (!token) {
     return (
-      <View style={styles.container}>
-        <Text style={styles.subtitle}>Log in to view profile</Text>
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text style={{ fontSize: 18, marginBottom: 12 }}>
+          Log in to view profile
+        </Text>
         <Button title="LogIn" onPress={() => router.push("/login")} />
       </View>
     );
