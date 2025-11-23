@@ -1,14 +1,16 @@
+import { useThemeColor } from "@/hooks/use-theme-color";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 import React from "react";
 import { Image } from "react-native";
 
 export default function TabsLayout() {
+  const activeTint = useThemeColor({}, "tabIconSelected");
   return (
     <Tabs
       screenOptions={{
         headerShown: true,
-        tabBarActiveTintColor: "#007AFF",
+        tabBarActiveTintColor: activeTint,
         headerRight: () => (
           <Image
             source={require("../../assets/logo.png")}

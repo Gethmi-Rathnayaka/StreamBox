@@ -1,3 +1,4 @@
+import { useThemeColor } from "@/hooks/use-theme-color";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Button, Image, StyleSheet, Text, TextInput, View } from "react-native";
@@ -52,13 +53,19 @@ export default function Profile() {
     dispatch(logout());
   };
 
+  const btnColor = useThemeColor({}, "primaryVariant");
+
   if (!token) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <Text style={{ fontSize: 18, marginBottom: 12 }}>
           Log in to view profile
         </Text>
-        <Button title="LogIn" onPress={() => router.push("/login")} />
+        <Button
+          title="LogIn"
+          onPress={() => router.push("/login")}
+          color={btnColor}
+        />
       </View>
     );
   }
@@ -99,11 +106,12 @@ export default function Profile() {
                 setEditingStarted(false);
                 setSaving(false);
               }}
+              color={btnColor}
             />
           )}
 
           <View style={{ height: 16 }} />
-          <Button title="LogOut" onPress={handleLogout} />
+          <Button title="LogOut" onPress={handleLogout} color={btnColor} />
         </View>
       ) : (
         <Text>Loading profile...</Text>

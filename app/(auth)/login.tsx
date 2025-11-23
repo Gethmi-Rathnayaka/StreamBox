@@ -1,7 +1,16 @@
+import { useThemeColor } from "@/hooks/use-theme-color";
 import { useRouter } from "expo-router";
 import { Formik } from "formik";
 import React, { useState } from "react";
-import { Alert, Button, StyleSheet, Text, TextInput, View, Image } from "react-native";
+import {
+  Alert,
+  Button,
+  Image,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import { useDispatch } from "react-redux";
 import * as Yup from "yup";
 import { setAuth } from "../../store/authSlice";
@@ -16,6 +25,7 @@ export default function Login() {
   const dispatch = useDispatch();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const btnColor = useThemeColor({}, "primaryVariant");
 
   return (
     <View style={styles.container}>
@@ -71,12 +81,14 @@ export default function Login() {
               title={loading ? "Logging in..." : "Login"}
               onPress={handleSubmit as any}
               disabled={loading}
+              color={btnColor}
             />
 
             <View style={{ height: 10 }} />
             <Button
               title="Go to Register"
               onPress={() => router.push("/register")}
+              color={btnColor}
             />
           </>
         )}
@@ -94,7 +106,18 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   title: { fontSize: 24, fontWeight: "bold", textAlign: "center" },
-  subtitle: { fontSize: 14, color: "#666", textAlign: "center", marginBottom: 20 },
-  input: { borderWidth: 1, padding: 12, marginBottom: 10, borderRadius: 8, borderColor: "#ccc" },
+  subtitle: {
+    fontSize: 14,
+    color: "#666",
+    textAlign: "center",
+    marginBottom: 20,
+  },
+  input: {
+    borderWidth: 1,
+    padding: 12,
+    marginBottom: 10,
+    borderRadius: 8,
+    borderColor: "#ccc",
+  },
   error: { color: "red", marginBottom: 8 },
 });
