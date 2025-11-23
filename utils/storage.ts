@@ -1,0 +1,41 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+// Save favourites to AsyncStorage
+export const saveFavourites = async (favourites: any[]) => {
+  try {
+    await AsyncStorage.setItem("favourites", JSON.stringify(favourites));
+  } catch (err) {
+    console.log("Error saving favourites:", err);
+  }
+};
+
+// Load favourites from AsyncStorage
+export const loadFavourites = async () => {
+  try {
+    const data = await AsyncStorage.getItem("favourites");
+    return data ? JSON.parse(data) : [];
+  } catch (err) {
+    console.log("Error loading favourites:", err);
+    return [];
+  }
+};
+
+// Save auth info to AsyncStorage
+export const saveAuth = async (auth: any) => {
+  try {
+    await AsyncStorage.setItem("auth", JSON.stringify(auth));
+  } catch (err) {
+    console.log("Error saving auth:", err);
+  }
+};
+
+// Load auth info from AsyncStorage
+export const loadAuth = async () => {
+  try {
+    const data = await AsyncStorage.getItem("auth");
+    return data ? JSON.parse(data) : null;
+  } catch (err) {
+    console.log("Error loading auth:", err);
+    return null;
+  }
+};
