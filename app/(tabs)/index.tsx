@@ -1,98 +1,108 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import React, { useEffect, useMemo } from "react";
+import {
+  ActivityIndicator,
+  FlatList,
+  ScrollView,
+  Text,
+  View,
+} from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+import BannerCarousel from "../../components/BannerCarousel";
+import HorizontalMovieCard from "../../components/HorizontalMovieCard";
+import MovieCard from "../../components/MovieCard";
+import { loadFavouritesFromStorage, setMovies } from "../../store/movieSlice";
+import { RootState } from "../../store/store";
+import { getTrendingMovies } from "../../utils/tmdb";
 
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+export default function Home() {
+  const dispatch = useDispatch();
+  const movies = useSelector((state: RootState) => state.movies.list);
 
-export default function HomeScreen() {
+  useEffect(() => {
+    const loadData = async () => {
+      dispatch(loadFavouritesFromStorage());
+      const data = await getTrendingMovies();
+      dispatch(setMovies(data));
+    };
+    loadData();
+  }, []);
+
+  const bestOfTheWeek = useMemo(() => movies.slice(0, 10), [movies]);
+  const recommended = useMemo(() => movies.slice(5, 15), [movies]);
+  const continueWatching = useMemo(() => movies.slice(8, 18), [movies]);
+
+  if (!movies.length) {
+    return <ActivityIndicator size="large" style={{ flex: 1 }} />;
+  }
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
+    <ScrollView style={{ flex: 1 }}>
+      <BannerCarousel movies={movies} />
 
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+      <Section title="Best of This Week" style={{ marginTop: 10 }}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ paddingHorizontal: 10 }}
+        >
+          {bestOfTheWeek.map((movie) => (
+            <HorizontalMovieCard key={movie.id} movie={movie} />
+          ))}
+        </ScrollView>
+      </Section>
+
+      <Section title="Recommended For You">
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ paddingHorizontal: 10 }}
+        >
+          {recommended.map((movie) => (
+            <HorizontalMovieCard key={movie.id} movie={movie} />
+          ))}
+        </ScrollView>
+      </Section>
+
+      <Section title="Continue Watching">
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ paddingHorizontal: 10 }}
+        >
+          {continueWatching.map((movie) => (
+            <HorizontalMovieCard key={movie.id} movie={movie} />
+          ))}
+        </ScrollView>
+      </Section>
+
+      <Section title="Trending Now">
+        <FlatList
+          data={movies}
+          renderItem={({ item }) => <MovieCard movie={item} />}
+          keyExtractor={(item) => item.id.toString()}
+          scrollEnabled={false}
+        />
+      </Section>
+    </ScrollView>
   );
 }
 
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
-});
+const Section: React.FC<{ title: any; children: any; style?: any }> = ({
+  title,
+  children,
+  style,
+}) => (
+  <View style={[{ marginBottom: 20 }, style]}>
+    <Text
+      style={{
+        fontSize: 20,
+        fontWeight: "700",
+        marginBottom: 10,
+        paddingHorizontal: 10,
+      }}
+    >
+      {title}
+    </Text>
+    {children}
+  </View>
+);

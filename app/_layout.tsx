@@ -1,24 +1,42 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
+import { Stack, usePathname, useRouter } from "expo-router";
+import React, { useEffect } from "react";
+import { Provider, useDispatch } from "react-redux";
+import { setAuth } from "../store/authSlice";
+import { store } from "../store/store";
+import { loadAuth } from "../utils/storage";
 
-import { useColorScheme } from '@/hooks/use-color-scheme';
+function AuthGate() {
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const pathname = usePathname();
 
-export const unstable_settings = {
-  anchor: '(tabs)',
-};
+  useEffect(() => {
+    let mounted = true;
+    const restore = async () => {
+      try {
+        const auth = await loadAuth();
+        if (!mounted) return;
+        if (auth && auth.token) {
+          dispatch(setAuth(auth));
+        }
+      } catch (err) {
+        console.error("Auth restore failed", err);
+      }
+    };
+    restore();
+    return () => {
+      mounted = false;
+    };
+  }, [dispatch, router, pathname]);
+
+  return null;
+}
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <Provider store={store}>
+      <AuthGate />
+      <Stack screenOptions={{ headerShown: false }} />
+    </Provider>
   );
 }

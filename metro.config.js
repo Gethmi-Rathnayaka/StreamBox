@@ -15,6 +15,16 @@ defaultConfig.resolver.extraNodeModules = Object.assign(
   defaultConfig.resolver.extraNodeModules,
   {
     "expo-keep-awake": path.resolve(__dirname, "shims", "expo-keep-awake.js"),
+    // Metro sometimes struggles with packages that use package.json "exports" and .mjs entrypoints.
+    // Point `reselect` directly to its CJS bundle so Metro can resolve it reliably.
+    reselect: path.resolve(
+      __dirname,
+      "node_modules",
+      "reselect",
+      "dist",
+      "cjs",
+      "reselect.cjs"
+    ),
   }
 );
 
